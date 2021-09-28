@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	<context:component-scan base-package="spring.aop.board"/>
+	
+	<!-- 공통기능 -->
+	<bean id="log" class="spring.aop.board.Log"/>
+	<aop:config>
+		<!-- 핵심 기능 -->
+		<aop:pointcut id="boardfunction" expression="execution(public void spring.aop.board.BoardDAO.selectBoard())"/>
+		<!-- 핵심 기능 위치 -->
+		<aop:aspect ref="log">
+			<aop:before pointcut-ref="boardfunction" method="beforeLog"/>
+		</aop:aspect>
+	
+	</aop:config>
+	<aop:config>
+		<!-- 핵심 기능 -->
+		<aop:pointcut id="boardfun" expression="execution(public void spring.aop.board.BoardDAO.*Board(int,..))"/>
+		<!-- 핵심 기능 위치 -->
+		<aop:aspect ref="log">
+			<aop:after pointcut-ref="boardfun" method="afterLog"/>
+		</aop:aspect>
+	
+	</aop:config>
+	
+</beans>
